@@ -14,11 +14,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Blue
+import androidx.compose.ui.graphics.Color.Companion.Cyan
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.jetpackcomposeexample.ui.theme.RoadGalleryTheme
 
 class MainActivity : ComponentActivity() {
@@ -36,7 +43,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     // Loading an image resource from drawable
-    val image: Painter = painterResource(id = R.drawable.ic_launcher_foreground)
+    val image: Painter = painterResource(id = R.drawable.welcome)
+    val LightBlue = Color(0xFF0073CF)
+
+    val gradientColors = listOf(LightBlue, Cyan , LightBlue /*...*/)
+
 
     // Column to arrange the Text and Image vertically
     Column(
@@ -44,12 +55,18 @@ fun MainScreen() {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.padding(16.dp).fillMaxSize()
     ) {
-        // Displaying the Text
+
         Text(
-            text = "Welcome to QM!",
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            text = "Welcome from Quartett mobile!",
+            style = TextStyle(
+                fontSize = 48.sp,
+                brush = Brush.linearGradient(
+                    colors = gradientColors
+                )
+            ),
+            modifier = Modifier.padding(bottom = 16.dp),
         )
+
 
         // Displaying the Image
         Image(
