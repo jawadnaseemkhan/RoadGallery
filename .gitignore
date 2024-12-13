@@ -24,3 +24,7 @@ local.properties
 /.idea/migrations.xml
 /.idea/misc.xml
 /.idea/runConfigurations.xml
+/automotive/release/baselineProfiles/0/automotive-release.dm
+/automotive/release/baselineProfiles/1/automotive-release.dm
+/automotive/release/automotive-release.apk
+/automotive/release/output-metadata.json
