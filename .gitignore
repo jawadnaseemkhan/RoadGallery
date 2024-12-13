@@ -15,3 +15,12 @@
 local.properties
 /.idea/.gitignore
 /.idea/vcs.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/compiler.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/emulatorDisplays.xml
+/.idea/gradle.xml
+/.idea/kotlinc.xml
+/.idea/migrations.xml
+/.idea/misc.xml
+/.idea/runConfigurations.xml
