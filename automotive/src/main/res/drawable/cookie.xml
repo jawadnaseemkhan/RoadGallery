@@ -1,0 +1,24 @@
+<!-- res/drawable/cookie.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+    <group>
+        <path
+            android:fillColor="#D2691E"
+            android:pathData="M64,4a60,60 0 1,0 0,120a60,60 0 1,0 0,-120z"/>
+        <path
+            android:fillColor="#8B4513"
+            android:pathData="M40,30a10,10 0 1,0 0,20a10,10 0 1,0 0,-20z"/>
+        <path
+            android:fillColor="#8B4513"
+            android:pathData="M80,40a10,10 0 1,0 0,20a10,10 0 1,0 0,-20z"/>
+        <path
+            android:fillColor="#8B4513"
+            android:pathData="M60,70a10,10 0 1,0 0,20a10,10 0 1,0 0,-20z"/>
+        <path
+            android:fillColor="#8B4513"
+            android:pathData="M90,80a10,10 0 1,0 0,20a10,10 0 1,0 0,-20z"/>
+    </group>
+</vector>
