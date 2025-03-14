@@ -1,86 +1,114 @@
 package de.quartett.mobile.roadgallery
 
+import android.car.Car
+import android.car.hardware.CarSensorManager
+import android.content.ComponentName
+import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.IBinder
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.graphics.Color.Companion.Cyan
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.example.jetpackcomposeexample.ui.theme.RoadGalleryTheme
+import kotlinx.coroutines.flow.MutableStateFlow
+
 
 class MainActivity : ComponentActivity() {
+    private lateinit var car : Car
+    private val permissions = arrayOf(Car.PERMISSION_SPEED,Car.PERMISSION_POWERTRAIN)
+
+    private val speedFlow = MutableStateFlow(0f)
+    private val gearFlow = MutableStateFlow(0)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initCar()
         setContent {
             RoadGalleryTheme {
                 // A surface container using the 'background' color from the theme
-                MainScreen()
+                val speed by speedFlow.collectAsState()
+                val gear by gearFlow.collectAsState()
+                MainView(speed, gear)
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if(checkSelfPermission(permissions[0]) == PackageManager.PERMISSION_GRANTED) {
+            if (!car.isConnected && !car.isConnecting) car.connect()
+        } else {
+            requestPermissions(permissions, 0)
+        }
+
+        if (!car.isConnected && !car.isConnecting) car.connect()
+    }
+
+    override fun onPause() {
+        if(car.isConnected) car.disconnect()
+        super.onPause()
+    }
+
+    private fun initCar() {
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_AUTOMOTIVE)) {
+            Log.wtf("XXX", "FEATURE_AUTOMOTIVE is not available!")
+            return
+        }
+
+        if(::car.isInitialized) {
+            Log.wtf("XXX", "CAR is not initialized!")
+            return
+        }
+
+        car = Car.createCar(this, object : ServiceConnection {
+            override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
+                onCarServiceReady()
+            }
+
+            override fun onServiceDisconnected(componentName: ComponentName) {
+                // on failure callback
+            }
+        })
+    }
+
+    private fun onCarServiceReady() {
+        watchSpeedSensor()
+    }
+
+    private fun watchSpeedSensor() {
+        val sensorManager = car.getCarManager(Car.SENSOR_SERVICE) as CarSensorManager
+        sensorManager.registerListener(
+                { carSensorEvent ->
+                    Log.d("MainActivity", "Speed: ${carSensorEvent.floatValues[0]}")
+                    speedFlow.value = carSensorEvent.floatValues[0]
+                },
+                CarSensorManager.SENSOR_TYPE_CAR_SPEED,
+                CarSensorManager.SENSOR_RATE_NORMAL)
+        sensorManager.registerListener(
+                { carSensorEvent ->
+                    Log.d("MainActivity", "Gear: ${carSensorEvent.intValues[0]}")
+                    gearFlow.value = carSensorEvent.intValues[0]
+                },
+                CarSensorManager.SENSOR_TYPE_GEAR,
+                CarSensorManager.SENSOR_RATE_NORMAL)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray,
+                                            deviceId: Int) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
+
+        if (permissions.indexOf(Car.PERMISSION_SPEED) != -1
+            && grantResults[permissions.indexOf(Car.PERMISSION_SPEED)] == PackageManager.PERMISSION_GRANTED
+            && permissions.indexOf(Car.PERMISSION_POWERTRAIN) != -1
+            && grantResults[permissions.indexOf(Car.PERMISSION_POWERTRAIN)] == PackageManager.PERMISSION_GRANTED) {
+            if (!car.isConnected && !car.isConnecting) car.connect()
         }
     }
 }
 
-@Composable
-fun MainScreen() {
-    // Loading an image resource from drawable
-    val image: Painter = painterResource(id = R.drawable.welcome)
-    val LightBlue = Color(0xFF0073CF)
-
-    val gradientColors = listOf(LightBlue, Cyan , LightBlue /*...*/)
-
-
-    // Column to arrange the Text and Image vertically
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(16.dp).fillMaxSize()
-    ) {
-
-        Text(
-            text = "Welcome from Quartett mobile!",
-            style = TextStyle(
-                fontSize = 48.sp,
-                brush = Brush.linearGradient(
-                    colors = gradientColors
-                )
-            ),
-            modifier = Modifier.padding(bottom = 16.dp),
-        )
-
-
-        // Displaying the Image
-        Image(
-            painter = image,
-            contentDescription = "Sample Image",
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    RoadGalleryTheme {
-        MainScreen()
-    }
-}
