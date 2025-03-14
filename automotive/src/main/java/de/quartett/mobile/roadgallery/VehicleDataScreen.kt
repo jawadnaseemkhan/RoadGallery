@@ -40,7 +40,7 @@ fun VehicleDataScreen(viewModel: MainViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Speed:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
-            Text("${"%.1f".format(speed)} km/h", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("${"%.1f".format(speed*3.6)} km/h", style = TextStyle(fontSize = 18.sp, color = Color.Black))
         }
         HorizontalDivider(color = Color.Gray, thickness = 1.dp)
         Row(

@@ -25,6 +25,9 @@ class MainViewModel(
     var pushUiState by mutableStateOf(pushUiState)
         private set
 
+    /**
+     * Speed in m/s
+     */
     val speedFlow = MutableStateFlow(0f)
     val gearFlow = MutableStateFlow(0)
     val fuelLevelFlow = MutableStateFlow(0f)
