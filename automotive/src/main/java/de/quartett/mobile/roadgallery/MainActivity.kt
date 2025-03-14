@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.example.jetpackcomposeexample.ui.theme.RoadGalleryTheme
 import android.car.Car
 import android.car.hardware.CarSensorManager
@@ -19,10 +18,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : ComponentActivity() {
     private lateinit var car : Car
-    private val permissions = arrayOf(Car.PERMISSION_SPEED,Car.PERMISSION_POWERTRAIN)
+    private val permissions = arrayOf(Car.PERMISSION_SPEED, Car.PERMISSION_POWERTRAIN)
 
     private val speedFlow = MutableStateFlow(0f)
     private val gearFlow = MutableStateFlow(0)
+    private val fuelLevelFlow = MutableStateFlow(0f)
+    private val rangeRemainingFlow = MutableStateFlow(0f)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +32,9 @@ class MainActivity : ComponentActivity() {
             RoadGalleryTheme {
                 val speed by speedFlow.collectAsState()
                 val gear by gearFlow.collectAsState()
-                MainView(speed, gear)
+                val fuelLevel by fuelLevelFlow.collectAsState()
+                val rangeRemaining by rangeRemainingFlow.collectAsState()
+                MainView(speed, gear, fuelLevel, rangeRemaining)
             }
         }
     }
@@ -52,6 +55,7 @@ class MainActivity : ComponentActivity() {
         if (car.isConnected) car.disconnect()
         super.onPause()
     }
+
     private fun initCar() {
         if (!packageManager.hasSystemFeature(PackageManager.FEATURE_AUTOMOTIVE)) {
             Log.wtf("XXX", "FEATURE_AUTOMOTIVE is not available!")
@@ -76,6 +80,8 @@ class MainActivity : ComponentActivity() {
 
     private fun onCarServiceReady() {
         watchSpeedSensor()
+        watchFuelLevelSensor()
+        watchRPMSensor()
     }
 
     private fun watchSpeedSensor() {
@@ -96,6 +102,28 @@ class MainActivity : ComponentActivity() {
             CarSensorManager.SENSOR_RATE_NORMAL)
     }
 
+    private fun watchFuelLevelSensor() {
+        val sensorManager = car.getCarManager(Car.SENSOR_SERVICE) as CarSensorManager
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                Log.d("MainActivity", "Fuel Level: ${carSensorEvent.floatValues[0]}")
+                fuelLevelFlow.value = carSensorEvent.floatValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_FUEL_LEVEL,
+            CarSensorManager.SENSOR_RATE_NORMAL)
+    }
+
+    private fun watchRPMSensor() {
+        val sensorManager = car.getCarManager(Car.SENSOR_SERVICE) as CarSensorManager
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                Log.d("MainActivity", "Range Remaining: ${carSensorEvent.floatValues[0]}")
+                rangeRemainingFlow.value = carSensorEvent.floatValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_RPM,
+            CarSensorManager.SENSOR_RATE_NORMAL)
+    }
+
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<out String>,
                                             grantResults: IntArray,
@@ -110,4 +138,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

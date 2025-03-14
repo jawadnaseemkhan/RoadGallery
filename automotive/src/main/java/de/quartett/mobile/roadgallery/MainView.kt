@@ -13,9 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.jetpackcomposeexample.ui.theme.RoadGalleryTheme
 
 @Composable
-fun MainView(speed: Float, gear: Int) {
+fun MainView(speed: Float, gear: Int, fuelLevel: Float, rangeRemaining: Float) {
     var selectedTabIndex by remember { mutableStateOf(0) }
-    val tabs = listOf("Vehicle Data", "Cookies", "Covesa Push")
+    val tabs = listOf("Vehicle Data", "Cookies", "Covesa Push", "WebView")
 
     Column {
         TabRow(selectedTabIndex = selectedTabIndex) {
@@ -28,9 +28,10 @@ fun MainView(speed: Float, gear: Int) {
             }
         }
         when (selectedTabIndex) {
-            0 -> VehicleDataScreen(speed, gear)
+            0 -> VehicleDataScreen(speed, gear, fuelLevel, rangeRemaining)
             1 -> CookieScreen()
             2 -> CovesaPushScreen()
+            3 -> WebViewScreen("https://www.google.com")
         }
     }
 }
