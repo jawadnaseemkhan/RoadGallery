@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "de.quartett.mobile.roadgallery"
-        minSdk = 28
+        minSdk = 29
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
@@ -45,7 +45,7 @@ android {
 }
 
 dependencies {
-
+    implementation(files("../libs/client-debug.aar"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
