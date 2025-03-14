@@ -14,6 +14,12 @@ import android.content.pm.PackageManager
 import android.os.IBinder
 import android.util.Log
 import androidx.compose.runtime.collectAsState
+import global.covesa.sdk.client.push.ActionEvent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -29,13 +35,31 @@ class MainActivity : ComponentActivity() {
         initCar()
         setContent {
             RoadGalleryTheme {
+                val viewModel: MainViewModel = viewModel {
+
+
+                    MainViewModel(
+                        pushUiState = PushUiState(this@MainActivity),
+                    )
+                }
+
                 val speed by speedFlow.collectAsState()
                 val gear by gearFlow.collectAsState()
-                MainView(speed, gear)
+
+                MainView(viewModel, speed, gear)
+            }
+        }
+        subscribeActions()
+    }
+
+    private var job : Job? = null
+    private fun subscribeActions() {
+        job = CoroutineScope(Dispatchers.IO).launch {
+            ActionEvent.events.collect {
+                it.handleAction(this@MainActivity)
             }
         }
     }
-
     override fun onResume() {
         super.onResume()
 
