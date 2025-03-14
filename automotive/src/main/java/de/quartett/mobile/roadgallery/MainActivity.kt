@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +52,48 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
+    var selectedTabIndex by remember { mutableStateOf(0) }
+    val tabs = listOf("Vehicle Data", "Cookies", "Covesa Push")
+
+    Column {
+        TabRow(selectedTabIndex = selectedTabIndex) {
+            tabs.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    text = { Text(title) }
+                )
+            }
+        }
+        when (selectedTabIndex) {
+            0 -> VehicleDataScreen()
+            1 -> CookieScreen()
+            2 -> CovesaPushScreen()
+        }
+    }
+}
+
+@Composable
+fun VehicleDataScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Vehicle Data",
+            style = TextStyle(
+                fontSize = 24.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+        )
+    }
+}
+
+@Composable
+fun CookieScreen() {
     var counter1 by remember { mutableStateOf(0) }
     var counter2 by remember { mutableStateOf(0) }
     var rotation1 by remember { mutableStateOf(0f) }
@@ -95,7 +139,7 @@ fun MainScreen() {
             modifier = Modifier.wrapContentHeight()
         ) {
             Text(
-                text = "Welcome from BMW! (with cookies)",
+                text = "Welcome with cookies!",
                 style = TextStyle(
                     fontSize = 48.sp,
                     color = BMWBlue,
@@ -170,6 +214,25 @@ fun MainScreen() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CovesaPushScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Covesa Push",
+            style = TextStyle(
+                fontSize = 24.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+        )
     }
 }
 
