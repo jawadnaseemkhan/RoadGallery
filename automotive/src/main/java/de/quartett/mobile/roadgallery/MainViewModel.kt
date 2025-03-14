@@ -27,6 +27,8 @@ class MainViewModel(
 
     val speedFlow = MutableStateFlow(0f)
     val gearFlow = MutableStateFlow(0)
+    val fuelLevelFlow = MutableStateFlow(0f)
+    val rangeRemainingFlow = MutableStateFlow(0f)
 
     var car:Car? = null
 
@@ -82,6 +84,8 @@ class MainViewModel(
 
     private fun onCarServiceReady() {
         watchSpeedSensor()
+        watchFuelLevelSensor()
+        watchRPMSensor()
     }
 
     //    Push
@@ -124,5 +128,28 @@ class MainViewModel(
             CarSensorManager.SENSOR_TYPE_GEAR,
             CarSensorManager.SENSOR_RATE_NORMAL
         )
+    }
+    private fun watchFuelLevelSensor() {
+        val car = car ?: return
+        val sensorManager = car.getCarManager(Car.SENSOR_SERVICE) as CarSensorManager
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                Log.d("MainActivity", "Fuel Level: ${carSensorEvent.floatValues[0]}")
+                fuelLevelFlow.value = carSensorEvent.floatValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_FUEL_LEVEL,
+            CarSensorManager.SENSOR_RATE_NORMAL)
+    }
+
+    private fun watchRPMSensor() {
+        val car = car ?: return
+        val sensorManager = car.getCarManager(Car.SENSOR_SERVICE) as CarSensorManager
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                Log.d("MainActivity", "Range Remaining: ${carSensorEvent.floatValues[0]}")
+                rangeRemainingFlow.value = carSensorEvent.floatValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_RPM,
+            CarSensorManager.SENSOR_RATE_NORMAL)
     }
 }

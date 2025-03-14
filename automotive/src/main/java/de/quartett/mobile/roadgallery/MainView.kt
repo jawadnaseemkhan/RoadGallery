@@ -15,7 +15,7 @@ import com.example.jetpackcomposeexample.ui.theme.RoadGalleryTheme
 @Composable
 fun MainView(viewModel: MainViewModel) {
     var selectedTabIndex by remember { mutableStateOf(0) }
-    val tabs = listOf("Vehicle Data", "Cookies", "Covesa Push")
+    val tabs = listOf("Vehicle Data", "Cookies", "Covesa Push", "WebView")
 
     Column {
         TabRow(selectedTabIndex = selectedTabIndex) {
@@ -31,6 +31,7 @@ fun MainView(viewModel: MainViewModel) {
             0 -> VehicleDataScreen(viewModel)
             1 -> CookieScreen()
             2 -> CovesaPushScreen(viewModel)
+            3 -> WebViewScreen("https://www.google.com")
         }
     }
 }
