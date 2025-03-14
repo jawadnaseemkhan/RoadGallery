@@ -24,6 +24,12 @@ class MainActivity : ComponentActivity() {
     private val gearFlow = MutableStateFlow(0)
     private val fuelLevelFlow = MutableStateFlow(0f)
     private val rangeRemainingFlow = MutableStateFlow(0f)
+    private val engineOilLevelFlow = MutableStateFlow(0f)
+    private val outsideTemperatureFlow = MutableStateFlow(0f)
+    private val fuelDoorOpenFlow = MutableStateFlow(false)
+    private val ignitionStateFlow = MutableStateFlow(0)
+    private val parkingBrakeFlow = MutableStateFlow(false)
+    private val tractionControlActiveFlow = MutableStateFlow(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +40,16 @@ class MainActivity : ComponentActivity() {
                 val gear by gearFlow.collectAsState()
                 val fuelLevel by fuelLevelFlow.collectAsState()
                 val rangeRemaining by rangeRemainingFlow.collectAsState()
-                MainView(speed, gear, fuelLevel, rangeRemaining)
+                val engineOilLevel by engineOilLevelFlow.collectAsState()
+                val outsideTemperature by outsideTemperatureFlow.collectAsState()
+                val fuelDoorOpen by fuelDoorOpenFlow.collectAsState()
+                val ignitionState by ignitionStateFlow.collectAsState()
+                val parkingBrake by parkingBrakeFlow.collectAsState()
+                val tractionControlActive by tractionControlActiveFlow.collectAsState()
+                MainView(
+                    speed, gear, fuelLevel, rangeRemaining, engineOilLevel, outsideTemperature,
+                    fuelDoorOpen, ignitionState, parkingBrake, tractionControlActive
+                )
             }
         }
     }
@@ -78,10 +93,12 @@ class MainActivity : ComponentActivity() {
         })
     }
 
+
     private fun onCarServiceReady() {
         watchSpeedSensor()
         watchFuelLevelSensor()
         watchRPMSensor()
+        watchAdditionalSensors()
     }
 
     private fun watchSpeedSensor() {
@@ -122,6 +139,58 @@ class MainActivity : ComponentActivity() {
             },
             CarSensorManager.SENSOR_TYPE_RPM,
             CarSensorManager.SENSOR_RATE_NORMAL)
+    }
+
+    private fun watchAdditionalSensors() {
+        val sensorManager = car.getCarManager(Car.SENSOR_SERVICE) as CarSensorManager
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                engineOilLevelFlow.value = carSensorEvent.floatValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_ENGINE_OIL_LEVEL,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                outsideTemperatureFlow.value = carSensorEvent.floatValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_ENV_OUTSIDE_TEMPERATURE,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                fuelDoorOpenFlow.value = carSensorEvent.intValues[0] == 1
+            },
+            CarSensorManager.SENSOR_TYPE_FUEL_DOOR_OPEN,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                ignitionStateFlow.value = carSensorEvent.intValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_IGNITION_STATE,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                parkingBrakeFlow.value = carSensorEvent.intValues[0] == 1
+            },
+            CarSensorManager.SENSOR_TYPE_PARKING_BRAKE,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                tractionControlActiveFlow.value = carSensorEvent.intValues[0] == 1
+            },
+            CarSensorManager.SENSOR_TYPE_TRACTION_CONTROL_ACTIVE,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
