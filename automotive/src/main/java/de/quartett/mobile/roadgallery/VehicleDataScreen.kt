@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun VehicleDataScreen(viewModel: MainViewModel) {
@@ -26,6 +27,12 @@ fun VehicleDataScreen(viewModel: MainViewModel) {
     val gear by viewModel.gearFlow.collectAsState()
     val fuelLevel by viewModel.fuelLevelFlow.collectAsState()
     val rangeRemaining by viewModel.rangeRemainingFlow.collectAsState()
+    val engineOilLevel by viewModel.engineOilLevelFlow.collectAsState()
+    val outsideTemperature by viewModel.outsideTemperatureFlow.collectAsState()
+    val fuelDoorOpen by viewModel.fuelDoorOpenFlow.collectAsState()
+    val ignitionState by viewModel.ignitionStateFlow.collectAsState()
+    val parkingBrake by viewModel.parkingBrakeFlow.collectAsState()
+    val tractionControlActive by viewModel.tractionControlActiveFlow.collectAsState()
 
     Column(
         modifier = Modifier
@@ -66,6 +73,53 @@ fun VehicleDataScreen(viewModel: MainViewModel) {
             Text("RPM:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
             Text("${"%.1f".format(rangeRemaining)} rpm", style = TextStyle(fontSize = 18.sp, color = Color.Black))
         }
-
+        HorizontalDivider(color = Color.Gray, thickness = 1.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Engine Oil Level:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("${"%.1f".format(engineOilLevel)}%", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+        }
+        HorizontalDivider(color = Color.Gray, thickness = 1.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Outside Temperature:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("${"%.1f".format(outsideTemperature)}°C", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+        }
+        HorizontalDivider(color = Color.Gray, thickness = 1.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Fuel Door Open:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text(if (fuelDoorOpen) "Yes" else "No", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+        }
+        HorizontalDivider(color = Color.Gray, thickness = 1.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Ignition State:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("$ignitionState", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+        }
+        HorizontalDivider(color = Color.Gray, thickness = 1.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Parking Brake:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text(if (parkingBrake) "Engaged" else "Released", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+        }
+        HorizontalDivider(color = Color.Gray, thickness = 1.dp)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text("Traction Control Active:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text(if (tractionControlActive) "Yes" else "No", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+        }
     }
 }

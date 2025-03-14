@@ -32,6 +32,12 @@ class MainViewModel(
     val gearFlow = MutableStateFlow(0)
     val fuelLevelFlow = MutableStateFlow(0f)
     val rangeRemainingFlow = MutableStateFlow(0f)
+    val engineOilLevelFlow = MutableStateFlow(0f)
+    val outsideTemperatureFlow = MutableStateFlow(0f)
+    val fuelDoorOpenFlow = MutableStateFlow(false)
+    val ignitionStateFlow = MutableStateFlow(0)
+    val parkingBrakeFlow = MutableStateFlow(false)
+    val tractionControlActiveFlow = MutableStateFlow(false)
 
     var car:Car? = null
 
@@ -89,6 +95,7 @@ class MainViewModel(
         watchSpeedSensor()
         watchFuelLevelSensor()
         watchRPMSensor()
+        watchAdditionalSensors()
     }
 
     //    Push
@@ -154,5 +161,58 @@ class MainViewModel(
             },
             CarSensorManager.SENSOR_TYPE_RPM,
             CarSensorManager.SENSOR_RATE_NORMAL)
+    }
+
+    private fun watchAdditionalSensors() {
+        val car = car ?: return
+        val sensorManager = car.getCarManager(Car.SENSOR_SERVICE) as CarSensorManager
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                engineOilLevelFlow.value = carSensorEvent.floatValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_ENGINE_OIL_LEVEL,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                outsideTemperatureFlow.value = carSensorEvent.floatValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_ENV_OUTSIDE_TEMPERATURE,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                fuelDoorOpenFlow.value = carSensorEvent.intValues[0] == 1
+            },
+            CarSensorManager.SENSOR_TYPE_FUEL_DOOR_OPEN,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                ignitionStateFlow.value = carSensorEvent.intValues[0]
+            },
+            CarSensorManager.SENSOR_TYPE_IGNITION_STATE,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                parkingBrakeFlow.value = carSensorEvent.intValues[0] == 1
+            },
+            CarSensorManager.SENSOR_TYPE_PARKING_BRAKE,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
+
+        sensorManager.registerListener(
+            { carSensorEvent ->
+                tractionControlActiveFlow.value = carSensorEvent.intValues[0] == 1
+            },
+            CarSensorManager.SENSOR_TYPE_TRACTION_CONTROL_ACTIVE,
+            CarSensorManager.SENSOR_RATE_NORMAL
+        )
     }
 }
