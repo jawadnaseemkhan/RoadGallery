@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -49,13 +50,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
-    var counter by remember { mutableStateOf(0) }
-    var rotation by remember { mutableStateOf(0f) }
+    var counter1 by remember { mutableStateOf(0) }
+    var counter2 by remember { mutableStateOf(0) }
+    var rotation1 by remember { mutableStateOf(0f) }
+    var rotation2 by remember { mutableStateOf(0f) }
     val image: Painter = painterResource(id = R.drawable.cookie) // Use a higher resolution image
     val BMWBlue = Color(0xFF0066B1)
 
-    val animatedRotation by animateFloatAsState(
-        targetValue = rotation,
+    val animatedRotation1 by animateFloatAsState(
+        targetValue = rotation1,
         animationSpec = keyframes {
             durationMillis = 300
             0f at 0 with androidx.compose.animation.core.LinearEasing
@@ -63,7 +66,20 @@ fun MainScreen() {
             0f at 300 with androidx.compose.animation.core.LinearEasing
         },
         finishedListener = {
-            rotation = 0f // Reset rotation after animation
+            rotation1 = 0f // Reset rotation after animation
+        }
+    )
+
+    val animatedRotation2 by animateFloatAsState(
+        targetValue = rotation2,
+        animationSpec = keyframes {
+            durationMillis = 300
+            0f at 0 with androidx.compose.animation.core.LinearEasing
+            10f at 150 with androidx.compose.animation.core.LinearEasing
+            0f at 300 with androidx.compose.animation.core.LinearEasing
+        },
+        finishedListener = {
+            rotation2 = 0f // Reset rotation after animation
         }
     )
 
@@ -90,37 +106,69 @@ fun MainScreen() {
 
             Spacer(modifier = Modifier.height(32.dp)) // Add space between text and image
 
-            Box(contentAlignment = Alignment.Center) {
-                Image(
-                    painter = image,
-                    contentDescription = "Cookie Image",
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .rotate(animatedRotation)
-                        .size(250.dp) // Adjust size as needed
-                )
-                Text(
-                    text = counter.toString(),
-                    style = TextStyle(
-                        fontSize = 48.sp,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = image,
+                        contentDescription = "Cookie Image",
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .rotate(animatedRotation1)
+                            .size(250.dp) // Adjust size as needed
                     )
-                )
-            }
-        }
+                    Text(
+                        text = counter1.toString(),
+                        style = TextStyle(
+                            fontSize = 48.sp,
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                    Button(
+                        onClick = {
+                            counter1++
+                            rotation1 = 10f
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = BMWBlue),
+                        modifier = Modifier.size(150.dp, 60.dp)
+                    ) {
+                        Text(text = "Player 1")
+                    }
+                }
 
-        Button(
-            onClick = {
-                counter++
-                rotation = 10f
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = BMWBlue),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        ) {
-            Text(text = "Get Cookie")
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = image,
+                        contentDescription = "Cookie Image",
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .rotate(animatedRotation2)
+                            .size(250.dp) // Adjust size as needed
+                    )
+                    Text(
+                        text = counter2.toString(),
+                        style = TextStyle(
+                            fontSize = 48.sp,
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                    Button(
+                        onClick = {
+                            counter2++
+                            rotation2 = 10f
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = BMWBlue),
+                        modifier = Modifier.size(150.dp, 60.dp)
+                    ) {
+                        Text(text = "Player 2")
+                    }
+                }
+            }
         }
     }
 }
