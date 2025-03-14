@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "de.quartett.mobile.roadgallery"
     compileSdk = 35
+    useLibrary("android.car")
 
     defaultConfig {
         applicationId = "de.quartett.mobile.roadgallery"
