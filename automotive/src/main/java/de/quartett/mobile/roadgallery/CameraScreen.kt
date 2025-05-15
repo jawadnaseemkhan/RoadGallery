@@ -3,7 +3,6 @@ package de.quartett.mobile.roadgallery
 import android.content.Context
 import android.hardware.camera2.CameraManager
 import android.util.Log
-import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -27,6 +26,7 @@ fun CameraScreen(viewModel: CameraViewModel) {
     Button(onClick = {viewModel.changeLens()}) {
         Text("Change Cameras")
     }
+
     val context = LocalContext.current
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -44,12 +44,10 @@ fun CameraScreen(viewModel: CameraViewModel) {
         Log.e("Camera", "No Camera")
     }
 
-    val cameraxSelector = CameraSelector.Builder().requireLensFacing(viewModel.camera).build()
-
-    LaunchedEffect(cameraxSelector) {
+    LaunchedEffect(viewModel.cameraSelector) {
         val cameraProvider = getCameraProvider(context)
         cameraProvider.unbindAll()
-        cameraProvider.bindToLifecycle(lifecycleOwner, cameraxSelector, preview)
+        cameraProvider.bindToLifecycle(lifecycleOwner, viewModel.cameraSelector, preview)
         preview.surfaceProvider = previewView.surfaceProvider
     }
     AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
