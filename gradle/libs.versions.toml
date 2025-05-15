@@ -15,6 +15,8 @@ composeBom = "2024.12.01"
 unifiedpush = "3.0.5"
 volley = "1.2.1"
 tinkWebpush = "1.11.0"
+cameraxVersion = "1.3.1"
+cameraLifecycle = "1.4.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +37,13 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 unifiedpush = { group = "org.unifiedpush.android", name = "connector", version.ref = "unifiedpush"}
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 tink-webpush = { group = "com.google.crypto.tink", name = "apps-webpush", version.ref = "tinkWebpush"}
+
+#camera
+cameraX-core = { group = "androidx.camera", name = "camera-core", version.ref="cameraxVersion"}
+cameraX-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref="cameraxVersion"}
+cameraX-view = { group = "androidx.camera", name = "camera-view", version.ref="cameraxVersion"}
+cameraX-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref="cameraxVersion"}
+androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "cameraLifecycle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
