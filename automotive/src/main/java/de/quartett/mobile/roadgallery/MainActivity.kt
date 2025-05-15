@@ -15,7 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import android.Manifest
 
 class MainActivity : ComponentActivity() {
-    private val permissions = arrayOf(Manifest.permission.CAMERA)
+    private val permissions = arrayOf(Manifest.permission.CAMERA, Car.PERMISSION_SPEED,Car.PERMISSION_POWERTRAIN)
 
     private var viewModel: MainViewModel? = null
     
@@ -50,7 +50,12 @@ class MainActivity : ComponentActivity() {
         if (checkSelfPermission(permissions[0]) == PackageManager.PERMISSION_GRANTED) {
             viewModel?.connect()
         } else {
-            requestPermissions(permissions, 0)
+            try {
+                requestPermissions(permissions, 0)
+            } catch (e: Throwable) {
+                println("failure $e")
+            }
+
         }
 
         viewModel?.connect()
