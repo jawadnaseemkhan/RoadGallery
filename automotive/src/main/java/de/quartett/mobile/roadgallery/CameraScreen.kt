@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -30,7 +29,6 @@ fun CameraScreen(viewModel: CameraViewModel) {
     }
     val context = LocalContext.current
 
-    val camera = CameraSelector.DEFAULT_FRONT_CAMERA
     val lifecycleOwner = LocalLifecycleOwner.current
     val preview = Preview.Builder().build()
     val previewView = remember {
@@ -48,7 +46,7 @@ fun CameraScreen(viewModel: CameraViewModel) {
 
     val cameraxSelector = CameraSelector.Builder().requireLensFacing(viewModel.camera).build()
 
-    LaunchedEffect(camera) {
+    LaunchedEffect(cameraxSelector) {
         val cameraProvider = getCameraProvider(context)
         cameraProvider.unbindAll()
         cameraProvider.bindToLifecycle(lifecycleOwner, cameraxSelector, preview)
