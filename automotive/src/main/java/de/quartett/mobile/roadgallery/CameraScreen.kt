@@ -1,6 +1,5 @@
 package de.quartett.mobile.roadgallery
 
-import android.Manifest
 import android.content.Context
 import android.hardware.camera2.CameraManager
 import android.util.Log
@@ -18,22 +17,13 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraScreen() {
-    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     val context = LocalContext.current
-
-    LaunchedEffect(cameraPermissionState) {
-        if (!cameraPermissionState.status.isGranted) {
-            cameraPermissionState.launchPermissionRequest()
-        }
-    }
 
     val camera = CameraSelector.DEFAULT_FRONT_CAMERA
     val lifecycleOwner = LocalLifecycleOwner.current

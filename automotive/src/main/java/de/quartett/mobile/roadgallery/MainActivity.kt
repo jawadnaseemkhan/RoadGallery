@@ -12,9 +12,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
+import android.Manifest
 
 class MainActivity : ComponentActivity() {
-    private val permissions = arrayOf(Car.PERMISSION_SPEED,Car.PERMISSION_POWERTRAIN)
+    private val permissions = arrayOf(Manifest.permission.CAMERA)
 
     private var viewModel: MainViewModel? = null
     
