@@ -30,7 +30,10 @@ class MainActivity : ComponentActivity() {
                         pushUiState = PushUiState(this@MainActivity),
                     ).also { viewModel = it }
                 }
-                MainView(viewModel)
+                val cameraViewModel = viewModel {
+                    CameraViewModel()
+                }
+                MainView(viewModel, cameraViewModel)
             }
         }
         subscribeActions()

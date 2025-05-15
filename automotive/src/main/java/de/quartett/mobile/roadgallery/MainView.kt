@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.jetpackcomposeexample.ui.theme.RoadGalleryTheme
 
 @Composable
-fun MainView(viewModel: MainViewModel) {
+fun MainView(viewModel: MainViewModel, cameraModel: CameraViewModel) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     val tabs = listOf("Vehicle Data", "Cookies", "Covesa Push", "WebView", "Camera")
 
@@ -32,7 +32,7 @@ fun MainView(viewModel: MainViewModel) {
             1 -> CookieScreen()
             2 -> CovesaPushScreen(viewModel)
             3 -> WebViewScreen("https://www.google.com")
-            4 -> CameraScreen()
+            4 -> CameraScreen(cameraModel)
         }
     }
 }

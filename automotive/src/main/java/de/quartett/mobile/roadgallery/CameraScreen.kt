@@ -8,21 +8,26 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraScreen() {
+fun CameraScreen(viewModel: CameraViewModel) {
+
+    Button(onClick = {viewModel.changeLens()}) {
+        Text("Change Cameras")
+    }
     val context = LocalContext.current
 
     val camera = CameraSelector.DEFAULT_FRONT_CAMERA
@@ -41,7 +46,7 @@ fun CameraScreen() {
         Log.e("Camera", "No Camera")
     }
 
-    val cameraxSelector = CameraSelector.Builder().setPhysicalCameraId("0").build()
+    val cameraxSelector = CameraSelector.Builder().requireLensFacing(viewModel.camera).build()
 
     LaunchedEffect(camera) {
         val cameraProvider = getCameraProvider(context)
