@@ -55,7 +55,7 @@ fun VehicleDataScreen(viewModel: MainViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Gear:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
-            Text("$gear", style = TextStyle(fontSize = 18.sp, color = if (gear > 3) Color.Red else Color.Green))
+            Text("$gear (see VehicleGear)", style = TextStyle(fontSize = 18.sp, color = if (gear > 3) Color.Red else Color.Green))
         }
         HorizontalDivider(color = Color.Gray, thickness = 1.dp)
         Row(
@@ -63,23 +63,23 @@ fun VehicleDataScreen(viewModel: MainViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Fuel Level:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
-            Text("${"%.1f".format(fuelLevel)}%", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("${"%.1f".format(fuelLevel)} mm", style = TextStyle(fontSize = 18.sp, color = Color.Black))
         }
         HorizontalDivider(color = Color.Gray, thickness = 1.dp)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("RPM:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
-            Text("${"%.1f".format(rangeRemaining)} rpm", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("Range remaining:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("${"%.1f".format(rangeRemaining)} m", style = TextStyle(fontSize = 18.sp, color = Color.Black))
         }
         HorizontalDivider(color = Color.Gray, thickness = 1.dp)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Engine Oil Level:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
-            Text("${"%.1f".format(engineOilLevel)}%", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("Engine Oil Level: ", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("$engineOilLevel (see VehicleOilLevel)", style = TextStyle(fontSize = 18.sp, color = Color.Black))
         }
         HorizontalDivider(color = Color.Gray, thickness = 1.dp)
         Row(
@@ -103,7 +103,7 @@ fun VehicleDataScreen(viewModel: MainViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Ignition State:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
-            Text("$ignitionState", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text("$ignitionState (see VehicleIgnitionState)", style = TextStyle(fontSize = 18.sp, color = Color.Black))
         }
         HorizontalDivider(color = Color.Gray, thickness = 1.dp)
         Row(

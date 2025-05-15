@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.unifiedpush)
     implementation(libs.volley)
     implementation(libs.tink.webpush)
+    implementation(libs.karpropertymanager)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,5 +1,6 @@
 package de.quartett.mobile.roadgallery
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,16 +15,14 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
-    private val permissions = arrayOf(Car.PERMISSION_SPEED,Car.PERMISSION_POWERTRAIN)
-
     private var viewModel: MainViewModel? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestPermissions()
         setContent {
             RoadGalleryTheme {
                 val viewModel: MainViewModel = viewModel {
-                    
                     MainViewModel(
                         context = this@MainActivity,
                         pushUiState = PushUiState(this@MainActivity),
@@ -43,34 +42,24 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    override fun onResume() {
-        super.onResume()
 
-        if (checkSelfPermission(permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-            viewModel?.connect()
-        } else {
-            requestPermissions(permissions, 0)
+    private fun requestPermissions() {
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Car.PERMISSION_SPEED, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), 1
+            )
         }
 
-        viewModel?.connect()
-    }
+        if (checkSelfPermission(Car.PERMISSION_POWERTRAIN) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Car.PERMISSION_POWERTRAIN), 1
+            )
+        }
 
-    override fun onPause() {
-        viewModel?.disconnect()
-        super.onPause()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<out String>,
-                                            grantResults: IntArray,
-                                            deviceId: Int) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
-
-        if (permissions.indexOf(Car.PERMISSION_SPEED) != -1
-            && grantResults[permissions.indexOf(Car.PERMISSION_SPEED)] == PackageManager.PERMISSION_GRANTED
-            && permissions.indexOf(Car.PERMISSION_POWERTRAIN) != -1
-            && grantResults[permissions.indexOf(Car.PERMISSION_POWERTRAIN)] == PackageManager.PERMISSION_GRANTED) {
-            viewModel?.connect()
+        if (checkSelfPermission(Car.PERMISSION_ENERGY) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Car.PERMISSION_ENERGY), 1
+            )
         }
     }
 }
