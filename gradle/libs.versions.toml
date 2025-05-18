@@ -15,6 +15,7 @@ composeBom = "2024.12.01"
 unifiedpush = "3.0.5"
 volley = "1.2.1"
 tinkWebpush = "1.11.0"
+karPropertyManagerVersion = "0.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +36,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 unifiedpush = { group = "org.unifiedpush.android", name = "connector", version.ref = "unifiedpush"}
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 tink-webpush = { group = "com.google.crypto.tink", name = "apps-webpush", version.ref = "tinkWebpush"}
+karpropertymanager = { group = "com.paradoxcat", name = "karpropertymanager", version.ref = "karPropertyManagerVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
